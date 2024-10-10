@@ -33,7 +33,7 @@ h1, h2 {
   transform: scale(1.05);
 }
 
-.shuffle-btn {
+.shuffle-btn, .back-btn {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -44,7 +44,7 @@ h1, h2 {
   margin-top: 20px;
 }
 
-.shuffle-btn:hover {
+.shuffle-btn:hover, .back-btn:hover {
   background-color: #0056b3;
 }
 
