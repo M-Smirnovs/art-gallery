@@ -1,27 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { artPieces } from '../data/artPieces';
+import { fetchArtworks } from '../api';
 
 const ArtGallery = () => {
-  const [displayedArt, setDisplayedArt] = useState(shuffleArt());
+  const [artworks, setArtworks] = useState([]);
+  const [displayedArt, setDisplayedArt] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  function shuffleArt() {
-    return artPieces.sort(() => 0.5 - Math.random()).slice(0, 3);
-  }
+  // Fetch all artworks on component mount
+  useEffect(() => {
+    const loadArtworks = async () => {
+      try {
+        const response = await fetchArtworks('', 10); // Fetch more results to have enough to shuffle
+        setArtworks(response.data.artObjects);
+        shuffleArtworks(response.data.artObjects); // Shuffle and display three on initial load
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching artworks:', error);
+        setLoading(false);
+      }
+    };
+    loadArtworks();
+  }, []);
+
+  // Shuffle the array and pick the first 3 items
+  const shuffleArtworks = (artList) => {
+    const shuffled = [...artList].sort(() => 0.5 - Math.random()).slice(0, 3);
+    setDisplayedArt(shuffled);
+  };
+
+  // Handler for Shuffle button
+  const handleShuffle = () => {
+    shuffleArtworks(artworks);
+  };
 
   return (
     <div className="gallery-container">
-      <h1>Art Gallery</h1>
-      <div className="art-gallery">
-        {displayedArt.map((art) => (
-          <Link to={`/art/${art.id}`} key={art.id}>
-            <img src={art.image} alt={art.name} className="art-image" />
-          </Link>
-        ))}
-      </div>
-      <button className="shuffle-btn" onClick={() => setDisplayedArt(shuffleArt())}>
-        Shuffle Art
-      </button>
+      <h1>Rijksmuseum Art Gallery</h1>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="art-gallery">
+          {displayedArt.map((art) => (
+            <Link to={`/art/${art.objectNumber}`} key={art.objectNumber}>
+              <img src={art.webImage.url} alt={art.title} className="art-image" />
+              <p>{art.title}</p>
+            </Link>
+          ))}
+        </div>
+      )}
+      <button onClick={handleShuffle} className="shuffle-btn">Shuffle Art</button>
     </div>
   );
 };
