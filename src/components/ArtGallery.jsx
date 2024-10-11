@@ -36,20 +36,24 @@ const ArtGallery = () => {
 
   return (
     <div className="gallery-container">
-      <h1>Rijksmuseum Art Gallery</h1>
+      <h1>Rijksmuseum Shuffle</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div className="art-gallery">
-          {displayedArt.map((art) => (
-            <Link to={`/art/${art.objectNumber}`} key={art.objectNumber}>
-              <img src={art.webImage.url} alt={art.title} className="art-image" />
-              <p>{art.title}</p>
-            </Link>
-          ))}
+        <div className="art-gallery-container">
+          <div className="art-gallery">
+            {displayedArt.map((art) => (
+              <Link to={`/art/${art.objectNumber}`} key={art.objectNumber}>
+                <img src={art.webImage.url} alt={art.title} className="art-image" />
+                {/* <p>{art.title}</p> */}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
-      <button onClick={handleShuffle} className="shuffle-btn">Shuffle Art</button>
+      <div className="btn-container">
+        <button onClick={handleShuffle} className="shuffle-btn">Shuffle</button>
+      </div>
     </div>
   );
 };
